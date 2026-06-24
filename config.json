@@ -1,0 +1,11 @@
+{
+    "checklist": [
+        "Water bottle",
+        "Towel",
+        "Fan",
+        "Bike frame & wheels!"
+    ],
+    "reminder_threshold_seconds": 30,
+    "popup_auto_close_seconds": 10,
+    "log_path": ""
+}
