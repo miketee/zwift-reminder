@@ -40,17 +40,20 @@ except ImportError:
     IS_WINDOWS = False
 
 # Win32 constants for the no-steal-focus topmost window trick
-GWL_EXSTYLE = -20
+GWL_EXSTYLE      = -20
 WS_EX_NOACTIVATE = 0x08000000
-WS_EX_TOPMOST = 0x00000008
-HWND_TOPMOST = -1
-SWP_NOMOVE = 0x0002
-SWP_NOSIZE = 0x0001
-SWP_NOACTIVATE = 0x0010
+WS_EX_TOPMOST    = 0x00000008
+HWND_TOPMOST     = -1
+SWP_NOMOVE       = 0x0002
+SWP_NOSIZE       = 0x0001
+SWP_NOACTIVATE   = 0x0010
 
-NAVY_BG = "#2d3561"
-ACCENT_BLUE = "#a0b0e8"
-WHITE = "#ffffff"
+# Colour palette
+WHITE       = "#ffffff"
+BLACK       = "#111111"
+GREY        = "#666666"
+ORANGE      = "#f47920"
+ZWIFT_BLUE  = "#00b0f0"   # Zwift heading blue
 
 
 def _apply_noactivate_topmost(root: tk.Tk):
@@ -101,47 +104,88 @@ def show_popup(checklist: list, auto_close_seconds: int = 10):
     try:
         root = tk.Tk()
         root.title("Zwift Pen Reminder")
-        root.configure(bg=NAVY_BG)
+        root.configure(bg=WHITE)
         root.overrideredirect(True)  # borderless
         root.attributes("-topmost", True)
 
-        # Position: top-right corner, clear of typical Zwift HUD elements
-        width, height = 340, 260
+        # --- Width: 28% of screen, min 360px ---
+        # Height is NOT fixed — we let Tkinter measure its own content
+        # after packing, then reposition to true centre. This prevents
+        # the button being clipped when content is taller than expected.
         screen_w = root.winfo_screenwidth()
-        x = screen_w - width - 24
-        y = 24
-        root.geometry(f"{width}x{height}+{x}+{y}")
+        screen_h = root.winfo_screenheight()
+        width = max(360, int(screen_w * 0.28))
 
-        # Header
+        # Font sizes scale with popup width
+        font_title    = ("Segoe UI", max(14, width // 24), "bold")
+        font_subtitle = ("Segoe UI", max(10, width // 36))
+        font_item     = ("Segoe UI", max(11, width // 32))
+        font_button   = ("Segoe UI", max(10, width // 36), "bold")
+
+        pad_x  = int(width * 0.08)   # horizontal padding inside card
+        pad_y  = 14                   # vertical gap between sections
+
+        # --- Thin orange top accent bar ---
+        tk.Frame(root, bg=ORANGE, height=4).pack(fill="x", side="top")
+
+        # --- Content area ---
+        content = tk.Frame(root, bg=WHITE)
+        content.pack(fill="both", expand=True, padx=pad_x, pady=(pad_y, 0))
+
+        # Header — Zwift blue, bold, left-aligned
         tk.Label(
-            root, text="Pre-Race Checklist", font=("Segoe UI", 14, "bold"),
-            bg=NAVY_BG, fg=WHITE, pady=10
-        ).pack(fill="x")
+            content,
+            text="Pre-ride Checklist",
+            font=font_title,
+            bg=WHITE, fg=ZWIFT_BLUE,
+            anchor="w", justify="left",
+        ).pack(fill="x", pady=(0, 4))
 
-        # Checklist items
-        list_frame = tk.Frame(root, bg=NAVY_BG)
-        list_frame.pack(fill="both", expand=True, padx=20)
+        # Subtitle — grey, left-aligned
+        tk.Label(
+            content,
+            text="Don't forget these!",
+            font=font_subtitle,
+            bg=WHITE, fg=GREY,
+            anchor="w", justify="left",
+        ).pack(fill="x", pady=(0, pad_y))
+
+        # Checklist items — black, left-aligned, ✓ prefix
         for item in checklist:
             tk.Label(
-                list_frame, text=f"\u2022 {item}", font=("Segoe UI", 11),
-                bg=NAVY_BG, fg=ACCENT_BLUE, anchor="w", justify="left"
-            ).pack(fill="x", pady=2)
+                content,
+                text=f"\u2713  {item}",
+                font=font_item,
+                bg=WHITE, fg=BLACK,
+                anchor="w", justify="left",
+            ).pack(fill="x", pady=3)
 
-        # Dismiss button + countdown, mouse-only interaction
-        bottom_frame = tk.Frame(root, bg=NAVY_BG)
-        bottom_frame.pack(fill="x", pady=16, padx=20)
+        # --- Dismiss button — centered, orange bg, white text ---
+        bottom_frame = tk.Frame(root, bg=WHITE)
+        bottom_frame.pack(fill="x", pady=pad_y, padx=pad_x)
 
         remaining = {"seconds": auto_close_seconds}
 
         dismiss_btn = tk.Button(
             bottom_frame,
             text=f"Dismiss ({remaining['seconds']}s)",
-            font=("Segoe UI", 10, "bold"),
-            bg=ACCENT_BLUE, fg=NAVY_BG,
-            relief="flat", padx=12, pady=6,
+            font=font_button,
+            bg=ORANGE, fg=WHITE,
+            relief="flat",
+            padx=int(width * 0.06),
+            pady=8,
+            cursor="hand2",
             command=lambda: root.destroy(),
         )
-        dismiss_btn.pack(side="right")
+        dismiss_btn.pack()
+
+        # --- Let Tkinter measure content, then set width + recentre ---
+        # Must happen after all widgets are packed and before mainloop.
+        root.update_idletasks()
+        actual_h = root.winfo_reqheight()
+        x = (screen_w - width) // 2
+        y = (screen_h - actual_h) // 2
+        root.geometry(f"{width}x{actual_h}+{x}+{y}")
 
         def tick():
             remaining["seconds"] -= 1
@@ -158,7 +202,6 @@ def show_popup(checklist: list, auto_close_seconds: int = 10):
 
         # Apply the safety-critical no-focus-steal styling once the
         # window actually exists on screen.
-        root.update_idletasks()
         _apply_noactivate_topmost(root)
 
         # Belt-and-suspenders: hard fallback destroy in case the tick
@@ -187,6 +230,6 @@ def _safe_destroy(root: tk.Tk):
 if __name__ == "__main__":
     # Manual test: run this file directly to preview the popup.
     show_popup(
-        ["Water bottle", "Towel", "Fan on", "Correct frame & wheels for this race"],
+        ["Water", "Fan", "Towel", "Bike Frame & Wheels!"],
         auto_close_seconds=10,
     )
