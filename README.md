@@ -111,7 +111,7 @@ Then delete the project folder.
 
 ## What this does NOT do
 
-- **Does not work in exclusive fullscreen mode.** Borderless Window is required. See Requirements above.
+- **Does not work in Fullscreen mode.** Windowed screen is required. See Requirements above.
 - **Does not work if Zwift was already running when you started your PC.** The watchdog starts on login; if Zwift was somehow already open at that point, it may miss the first detection cycle.
 - **Does not fire if you were already in the pen when Zwift launched.** The log watcher starts from the current position in `Log.txt` — it doesn't scan backwards. If you were already sitting in a pen when Zwift started, that reminder is missed. The next event will be caught normally.
 - **Does not support macOS or Linux.** For now, this tool is Windows-specific.
