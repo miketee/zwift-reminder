@@ -31,8 +31,7 @@ try:
 except ImportError:
     print(
         "ERROR: the 'psutil' package is required. Install it with:\n"
-        "    pip install psutil --break-system-packages\n"
-        "(or just 'pip install psutil' in a normal Windows Python install)"
+        "    pip install psutil\n"
     )
     sys.exit(1)
 
@@ -42,14 +41,41 @@ POLL_INTERVAL_SECONDS = 7
 WATCHER_SCRIPT = Path(__file__).resolve().parent / "watcher.py"
 LOG_FILE = Path(__file__).resolve().parent.parent / "watchdog_runtime.log"
 
+# Rotate log when it exceeds this size. Keeps the oldest half of
+# entries so there's always meaningful history without unbounded growth.
+LOG_MAX_BYTES = 200 * 1024  # 200 KB
+
 
 def log(message: str):
     try:
         from datetime import datetime
+        _rotate_log_if_needed(LOG_FILE)
         with open(LOG_FILE, "a", encoding="utf-8") as f:
             f.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {message}\n")
     except Exception:
         pass
+
+
+def _rotate_log_if_needed(log_path: Path):
+    """
+    If the log file exceeds LOG_MAX_BYTES, discard the oldest half of
+    its lines and rewrite it. This keeps recent history while bounding
+    file size to roughly LOG_MAX_BYTES.
+    """
+    try:
+        if not log_path.exists():
+            return
+        if log_path.stat().st_size < LOG_MAX_BYTES:
+            return
+        with open(log_path, "r", encoding="utf-8", errors="replace") as f:
+            lines = f.readlines()
+        # Keep the most recent half
+        keep = lines[len(lines) // 2:]
+        with open(log_path, "w", encoding="utf-8") as f:
+            f.write(f"[log rotated — older entries trimmed]\n")
+            f.writelines(keep)
+    except Exception:
+        pass  # Never let log rotation crash the main process
 
 
 def is_zwift_running() -> bool:
