@@ -142,7 +142,7 @@ Yes you can! Open `config.json` in Notepad and edit it to your liking:
 }
 ```
 
-`reminder_threshold_seconds` controls how close to the event start time the popup will still show. If you join a pen with less than 30 seconds to go, the popup is skipped (you're already rolling). `popup_auto_close_seconds` controls how long the popup stays on screen before auto-dismissing.
+`reminder_threshold_seconds` controls how close to the event start time the popup will still show. If you join a pen with less than 30 seconds to go, the popup is skipped (there's no time anyway). `popup_auto_close_seconds` controls how long the popup stays on screen before auto-dismissing.
 
 **Popup doesn't appear**
 
@@ -152,7 +152,7 @@ If `watcher_runtime.log` doesn't exist or is empty, check `watchdog_runtime.log`
 
 **Popup appears but steals focus from Zwift**
 
-Make sure Zwift is in Borderless Window mode, not exclusive fullscreen.
+Make sure Zwift is in Windowed mode, not Fullscreen.
 
 **`pip install psutil` fails**
 
