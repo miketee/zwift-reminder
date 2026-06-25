@@ -33,6 +33,9 @@ import tkinter as tk
 import traceback
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from common import load_config  # noqa: E402
+
 try:
     import ctypes
     IS_WINDOWS = sys.platform == "win32"
@@ -228,8 +231,16 @@ def _safe_destroy(root: tk.Tk):
 
 
 if __name__ == "__main__":
-    # Manual test: run this file directly to preview the popup.
-    show_popup(
-        ["Water", "Fan", "Towel", "Bike Frame & Wheels!"],
-        auto_close_seconds=10,
-    )
+    # Reads checklist and settings from config.json (project root).
+    # This is also the entry point when spawned as a subprocess by watcher.py.
+    try:
+        config = load_config()
+        checklist = config.get("checklist", [])
+        auto_close_seconds = config.get("popup_auto_close_seconds", 10)
+    except Exception:
+        # If config loading fails, fall back to safe defaults so the
+        # popup still appears rather than silently dying.
+        checklist = ["Water", "Fan", "Towel", "Bike Frame & Wheels!"]
+        auto_close_seconds = 10
+
+    show_popup(checklist, auto_close_seconds)
