@@ -136,13 +136,13 @@ Yes you can! Open `config.json` in Notepad and edit it to your liking:
         "Towel",
         "Bike Frame & Wheels!"
     ],
-    "reminder_threshold_seconds": 30,
-    "popup_auto_close_seconds": 10,
+    "reminder_threshold_seconds": 35,
+    "popup_auto_close_seconds": 15,
     "log_path": ""
 }
 ```
 
-`reminder_threshold_seconds` controls how close to the event start time the popup will still show. If you join a pen with less than 30 seconds to go, the popup is skipped (there's no time anyway). `popup_auto_close_seconds` controls how long the popup stays on screen before auto-dismissing.
+`reminder_threshold_seconds` controls how close to the event start time the popup will still show. If you join a pen with less than 35 seconds to go, the popup is skipped (there's no time anyway). `popup_auto_close_seconds` controls how long the popup stays on screen before auto-dismissing.
 
 **Popup doesn't appear**
 
