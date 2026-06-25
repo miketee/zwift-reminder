@@ -1,0 +1,3 @@
+# Ignore log files
+watchdog_runtime.log
+watcher_runtime.log
