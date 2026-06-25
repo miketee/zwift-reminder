@@ -1,25 +1,13 @@
-# Zwift Pen Reminder
+# Zwift Pre-ride Reminder
 
 **v0.1-beta** · Windows only · Python required
 
-A lightweight background utility that watches for when you join a Zwift event pen and shows a pre-ride checklist popup — so you never roll into a race having forgotten your water bottle, fan, or the right bike frame.
+A lightweight Zwift utility that pops up a reminder of things you'll need before a group ride or race! Eg water bottle, fan, towel and bike/wheel setup.
+
+NOTE: Pop-up only shows if you are in the starting pen, and have at least 30s to flag-off
 
 ![Popup preview](docs/popup_preview.png)
 
----
-
-## What it does
-
-When you join an event pen in Zwift, a popup appears in the centre of your screen with a checklist of things to sort before the race starts. It auto-dismisses after 10 seconds (configurable) and never steals keyboard focus from the game — your power-ups and steering inputs go to Zwift, not this tool.
-
-Once installed, it runs silently in the background every time you log into Windows. You don't need to launch or manage anything.
-
-**The popup looks like this:**
-
-- Header: "Pre-ride Checklist" (customisable)
-- Subtitle: "Don't forget these!" (customisable)
-- Your checklist items (fully customisable in `config.json`)
-- A countdown Dismiss button
 
 ---
 
@@ -33,14 +21,24 @@ Once installed, it runs silently in the background every time you log into Windo
 
 ---
 
+
+## Disclaimer
+
+This project is independent and not affiliated with, endorsed by, or approved by Zwift Inc. in any way. Zwift is a trademark of Zwift Inc. This tool works by reading a log file that Zwift writes to disk and does not modify, patch, or interact with Zwift or its servers in any way. Use it at your own discretion.
+
+
+---
+
 ## Installation
 
 **1. Check Python is installed**
 
-Open a command prompt and run:
+Open a command prompt (type "cmd" in the Window search bar), then run:
 ```
 python --version
 ```
+![Windows CMD Prompt](docs/windows_cmd.png)
+
 
 You should see something like `Python 3.11.9`. If you get an error, or a version below 3.9, download and install Python from [python.org](https://www.python.org/downloads/) before continuing.
 
@@ -63,28 +61,8 @@ Open a command prompt and run:
 pip install psutil
 ```
 
-**4. Customise your checklist** *(optional but recommended)*
 
-Open `config.json` in Notepad and edit it to your liking:
-```json
-{
-    "popup_title": "Pre-ride Checklist",
-    "popup_subtitle": "Don't forget these!",
-    "checklist": [
-        "Water",
-        "Fan",
-        "Towel",
-        "Bike Frame & Wheels!"
-    ],
-    "reminder_threshold_seconds": 30,
-    "popup_auto_close_seconds": 10,
-    "log_path": ""
-}
-```
-
-`reminder_threshold_seconds` controls how close to the event start time the popup will still show. If you join a pen with less than 30 seconds to go, the popup is skipped (you're already rolling). `popup_auto_close_seconds` controls how long the popup stays on screen before auto-dismissing.
-
-**5. Register the background task**
+**4. Register the background task**
 
 From the project folder, run:
 ```
@@ -98,7 +76,7 @@ Success: scheduled task 'ZwiftPenReminderWatchdog' created.
 
 If you see `Access is denied`, open a command prompt as Administrator (right-click → Run as administrator), navigate to the project folder, and run the command again. This is a one-time step — the task runs as a normal user from then on.
 
-**6. Start it immediately** *(without restarting)*
+**5. Start it immediately** *(without restarting)*
 
 ```
 schtasks /Run /TN "ZwiftPenReminderWatchdog"
@@ -106,7 +84,7 @@ schtasks /Run /TN "ZwiftPenReminderWatchdog"
 
 From this point on, the watchdog starts automatically every time you log into Windows. No further action needed.
 
-**7. Test it**
+**6. Test it**
 
 To confirm the popup works before your next ride:
 ```
@@ -131,16 +109,37 @@ Then delete the project folder.
 ## What this does NOT do
 
 - **Does not work in exclusive fullscreen mode.** Borderless Window is required. See Requirements above.
-- **Does not catch the pen if Zwift was already running when you started your PC.** The watchdog starts on login; if Zwift was somehow already open at that point, it may miss the first detection cycle (recovers within 7 seconds).
+- **Does not work if Zwift was already running when you started your PC.** The watchdog starts on login; if Zwift was somehow already open at that point, it may miss the first detection cycle.
 - **Does not fire if you were already in the pen when Zwift launched.** The log watcher starts from the current position in `Log.txt` — it doesn't scan backwards. If you were already sitting in a pen when Zwift started, that reminder is missed. The next event will be caught normally.
-- **Does not support macOS or Linux.** Zwift's log path and the no-focus-steal window trick are Windows-specific.
+- **Does not support macOS or Linux.** For now, this tool is Windows-specific.
 - **Does not modify Zwift or interact with it in any way.** It only reads Zwift's own log file (`Log.txt`), which Zwift writes itself. The Zwift process is never touched.
 - **Log format is undocumented.** Zwift doesn't publish the format of `Log.txt`. If Zwift changes it in a future update, detection may stop working until this tool is updated to match.
-- **Only tested on Group Rides** so far. Race pens are expected to behave the same but have not been confirmed.
 
 ---
 
-## Troubleshooting
+## Troubleshooting / Q&A
+
+
+**Can I customize the pop-up content?**
+
+Yes you can! Open `config.json` in Notepad and edit it to your liking:
+```json
+{
+    "popup_title": "Pre-ride Checklist",
+    "popup_subtitle": "Don't forget these!",
+    "checklist": [
+        "Water",
+        "Fan",
+        "Towel",
+        "Bike Frame & Wheels!"
+    ],
+    "reminder_threshold_seconds": 30,
+    "popup_auto_close_seconds": 10,
+    "log_path": ""
+}
+```
+
+`reminder_threshold_seconds` controls how close to the event start time the popup will still show. If you join a pen with less than 30 seconds to go, the popup is skipped (you're already rolling). `popup_auto_close_seconds` controls how long the popup stays on screen before auto-dismissing.
 
 **Popup doesn't appear**
 
@@ -172,7 +171,7 @@ Windows sometimes intercepts the `python` command and redirects to the Store. Th
 
 ## Feedback
 
-This is a v0.1 beta — it works, but it's only been tested by one person on Group Rides. If you try it, feedback is genuinely useful.
+This is a v0.1 beta. Expect bugs. If you try it, feedback is genuinely useful. Write to cathouseprojects@gmail.com
 
 **Please open a GitHub Issue if:**
 - The popup doesn't appear when you join a pen
@@ -182,15 +181,7 @@ This is a v0.1 beta — it works, but it's only been tested by one person on Gro
 
 When reporting an issue, please attach your `watcher_runtime.log` and `watchdog_runtime.log` files — they contain the information needed to diagnose what happened.
 
-**Pull requests welcome**, especially for:
-- Race pen testing and confirmation
-- macOS/Linux support
-- Anything in the "What this does NOT do" list above
 
 ---
 
-## How it works (technical)
 
-The watchdog (`watchdog.py`) runs at login and polls the Windows process list every 7 seconds. When it detects `Zwift.exe` or `ZwiftLauncher.exe`, it starts the log watcher (`watcher.py`). The watcher tails Zwift's `Log.txt` in real time, looking for the `JOINED_EVENT` marker followed by an `event start=` timestamp. When a pen join is detected, it spawns the popup (`popup.py`) as a separate process using `pythonw.exe`, with Win32 `WS_EX_NOACTIVATE` and `WS_EX_TOPMOST` styles applied so it renders above Zwift without ever stealing keyboard focus.
-
-Log files (`watchdog_runtime.log`, `watcher_runtime.log`) are capped at 200KB and self-rotate by trimming the oldest half when the limit is reached.
