@@ -97,7 +97,9 @@ def log_error(message: str):
         pass  # If even logging fails, give up silently. Never raise.
 
 
-def show_popup(checklist: list, auto_close_seconds: int = 10):
+def show_popup(checklist: list, auto_close_seconds: int = 10,
+               title: str = "Pre-ride Checklist",
+               subtitle: str = "Don't forget these!"):
     """
     Displays the reminder popup. Blocks until the popup closes
     (either by click or by the auto-close timer). Intended to be
@@ -138,7 +140,7 @@ def show_popup(checklist: list, auto_close_seconds: int = 10):
         # Header — Zwift blue, bold, left-aligned
         tk.Label(
             content,
-            text="Pre-ride Checklist",
+            text=title,
             font=font_title,
             bg=WHITE, fg=ZWIFT_BLUE,
             anchor="w", justify="left",
@@ -147,7 +149,7 @@ def show_popup(checklist: list, auto_close_seconds: int = 10):
         # Subtitle — grey, left-aligned
         tk.Label(
             content,
-            text="Don't forget these!",
+            text=subtitle,
             font=font_subtitle,
             bg=WHITE, fg=GREY,
             anchor="w", justify="left",
@@ -231,16 +233,20 @@ def _safe_destroy(root: tk.Tk):
 
 
 if __name__ == "__main__":
-    # Reads checklist and settings from config.json (project root).
+    # Reads all settings from config.json (project root).
     # This is also the entry point when spawned as a subprocess by watcher.py.
     try:
         config = load_config()
         checklist = config.get("checklist", [])
         auto_close_seconds = config.get("popup_auto_close_seconds", 10)
+        title = config.get("popup_title", "Pre-ride Checklist")
+        subtitle = config.get("popup_subtitle", "Don't forget these!")
     except Exception:
         # If config loading fails, fall back to safe defaults so the
         # popup still appears rather than silently dying.
         checklist = ["Water", "Fan", "Towel", "Bike Frame & Wheels!"]
         auto_close_seconds = 10
+        title = "Pre-ride Checklist"
+        subtitle = "Don't forget these!"
 
-    show_popup(checklist, auto_close_seconds)
+    show_popup(checklist, auto_close_seconds, title, subtitle)

@@ -1,11 +1,13 @@
 {
+    "popup_title": "Pre-ride Checklist",
+    "popup_subtitle": "Riding soon? Don't forget these!",
     "checklist": [
         "Water",
-        "Towel",
         "Fan",
-        "Bike frame & wheels!"
+        "Towel",
+        "Bike Frame & Wheels!"
     ],
-    "reminder_threshold_seconds": 30,
-    "popup_auto_close_seconds": 10,
+    "reminder_threshold_seconds": 35,
+    "popup_auto_close_seconds": 15,
     "log_path": ""
 }
