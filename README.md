@@ -15,7 +15,7 @@ NOTE: Pop-up only shows if you are in the starting pen, and have at least 30s to
 
 - **Windows 10 or 11**
 - **Python 3.9 or later** — download from [python.org](https://www.python.org/downloads/)
-- **Zwift running in Borderless Window mode** — the popup cannot appear over Zwift in exclusive fullscreen mode (this is a Windows limitation, not specific to this tool). To enable Borderless Window in Zwift: Settings → Graphics → Display Mode → Borderless Window
+- **Zwift running in Windowed mode only** — the pop-up currently does not work with Zwift in Fullscreen mode. To enable Windowed mode in Zwift: Settings → Audio & Video → Screen Mode → Windowed
 
 ![Zwift settings](docs/zwift_settings.png)
 
