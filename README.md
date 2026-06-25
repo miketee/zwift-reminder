@@ -46,7 +46,6 @@ You should see something like `Python 3.11.9`. If you get an error, or a version
 
 > **Important:** During installation, tick **"Add Python to PATH"** — this option is unticked by default and is required for everything below to work.
 
-![Add Python to PATH](docs/python_install_path.png)
 
 **2. Download the project**
 
