@@ -29,14 +29,26 @@ Once installed, it runs silently in the background every time you log into Windo
 - **Python 3.9 or later** — download from [python.org](https://www.python.org/downloads/)
 - **Zwift running in Borderless Window mode** — the popup cannot appear over Zwift in exclusive fullscreen mode (this is a Windows limitation, not specific to this tool). To enable Borderless Window in Zwift: Settings → Graphics → Display Mode → Borderless Window
 
-![Popup preview](docs/zwift_settings.png)
-
+![Zwift settings](docs/zwift_settings.png)
 
 ---
 
 ## Installation
 
-**1. Download the project**
+**1. Check Python is installed**
+
+Open a command prompt and run:
+```
+python --version
+```
+
+You should see something like `Python 3.11.9`. If you get an error, or a version below 3.9, download and install Python from [python.org](https://www.python.org/downloads/) before continuing.
+
+> **Important:** During installation, tick **"Add Python to PATH"** — this option is unticked by default and is required for everything below to work.
+
+![Add Python to PATH](docs/python_install_path.png)
+
+**2. Download the project**
 
 Click the green **Code** button on this page → **Download ZIP**, then extract it somewhere permanent (e.g. `C:\Users\YourName\Projects\zwift-reminder`).
 
@@ -45,14 +57,14 @@ Or if you have Git:
 git clone https://github.com/miketee/zwift-reminder.git
 ```
 
-**2. Install Python dependencies**
+**3. Install Python dependencies**
 
 Open a command prompt and run:
 ```
 pip install psutil
 ```
 
-**3. Customise your checklist** *(optional but recommended)*
+**4. Customise your checklist** *(optional but recommended)*
 
 Open `config.json` in Notepad and edit it to your liking:
 ```json
@@ -73,7 +85,7 @@ Open `config.json` in Notepad and edit it to your liking:
 
 `reminder_threshold_seconds` controls how close to the event start time the popup will still show. If you join a pen with less than 30 seconds to go, the popup is skipped (you're already rolling). `popup_auto_close_seconds` controls how long the popup stays on screen before auto-dismissing.
 
-**4. Register the background task**
+**5. Register the background task**
 
 From the project folder, run:
 ```
@@ -87,7 +99,7 @@ Success: scheduled task 'ZwiftPenReminderWatchdog' created.
 
 If you see `Access is denied`, open a command prompt as Administrator (right-click → Run as administrator), navigate to the project folder, and run the command again. This is a one-time step — the task runs as a normal user from then on.
 
-**5. Start it immediately** *(without restarting)*
+**6. Start it immediately** *(without restarting)*
 
 ```
 schtasks /Run /TN "ZwiftPenReminderWatchdog"
@@ -95,7 +107,7 @@ schtasks /Run /TN "ZwiftPenReminderWatchdog"
 
 From this point on, the watchdog starts automatically every time you log into Windows. No further action needed.
 
-**6. Test it**
+**7. Test it**
 
 To confirm the popup works before your next ride:
 ```
@@ -152,6 +164,10 @@ Or install using the full Python path:
 ```
 C:\Users\YourName\AppData\Local\Programs\Python\Python311\python.exe -m pip install psutil
 ```
+
+**`python --version` opens the Microsoft Store instead of showing a version**
+
+Windows sometimes intercepts the `python` command and redirects to the Store. This means Python isn't installed properly. Download it from [python.org](https://www.python.org/downloads/) directly, making sure to tick **"Add Python to PATH"** during installation.
 
 ---
 
