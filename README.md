@@ -29,6 +29,9 @@ Once installed, it runs silently in the background every time you log into Windo
 - **Python 3.9 or later** — download from [python.org](https://www.python.org/downloads/)
 - **Zwift running in Borderless Window mode** — the popup cannot appear over Zwift in exclusive fullscreen mode (this is a Windows limitation, not specific to this tool). To enable Borderless Window in Zwift: Settings → Graphics → Display Mode → Borderless Window
 
+![Popup preview](docs/zwift_settings.png)
+
+
 ---
 
 ## Installation
