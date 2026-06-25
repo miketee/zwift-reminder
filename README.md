@@ -76,6 +76,9 @@ Success: scheduled task 'ZwiftPenReminderWatchdog' created.
 
 If you see `Access is denied`, open a command prompt as Administrator (right-click → Run as administrator), navigate to the project folder, and run the command again. This is a one-time step — the task runs as a normal user from then on.
 
+![Windows CMD Administrator](docs/windows_cmd_administrator.png)
+
+
 **5. Start it immediately** *(without restarting)*
 
 ```
