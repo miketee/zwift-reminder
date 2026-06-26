@@ -4,7 +4,7 @@
 
 A lightweight Zwift utility that pops up a reminder of things you'll need before a group ride or race! Eg water bottle, fan, towel and bike/wheel setup.
 
-NOTE: Pop-up only shows if you are in the starting pen, and have at least 30s to flag-off
+NOTE: Pop-up only shows if you are in the starting pen, and have at least 35s to flag-off
 
 ![Popup preview](docs/popup_preview.png)
 
