@@ -15,7 +15,7 @@ NOTE: Pop-up only shows if you are in the starting pen, and have at least 30s to
 
 - **Windows 10 or 11**
 - **Python 3.9 or later** — download from [python.org](https://www.python.org/downloads/)
-- **Zwift running in Windowed mode only** — the pop-up currently does not work with Zwift in Fullscreen mode. To enable Windowed mode in Zwift: Settings → Audio & Video → Screen Mode → Windowed
+- **Zwift running in Windowed mode only** — the pop-up currently does not work with Zwift in Fullscreen mode. To enable Windowed mode in Zwift: Settings > Audio & Video > Screen Mode > Windowed
 
 ![Zwift settings](docs/zwift_settings.png)
 
